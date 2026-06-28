@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%">
+  <defs>
+    <!-- Gold Gradient for the Box, Swooshes, and Accents -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="40%" stop-color="#F3E5AB" />
+      <stop offset="70%" stop-color="#AA7C11" />
+      <stop offset="100%" stop-color="#664D03" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Black Background -->
+  <rect width="100%" height="100%" fill="#0A0A0A" />
+
+  <g transform="translate(40, 20)">
+    <!-- ========================================== -->
+    <!-- 1. THE GOLD "MR" BOX                       -->
+    <!-- ========================================== -->
+    <g transform="translate(10, 115)">
+      <!-- Main Square -->
+      <rect width="120" height="120" fill="url(#goldGrad)" rx="4" />
+      
+      <!-- Small dynamic tab/notch on the right edge of the box -->
+      <path d="M 120 45 L 128 53 L 128 67 L 120 75 Z" fill="url(#goldGrad)" />
+      
+      <!-- "MR" Text (Knocked out in dark background color) -->
+      <text x="60" y="78" 
+            font-family="'Arial Black', 'Impact', sans-serif" 
+            font-size="44" 
+            font-weight="900" 
+            fill="#0A0A0A" 
+            text-anchor="middle" 
+            letter-spacing="-1">MR</text>
+    </g>
+
+    <!-- ========================================== -->
+    <!-- 2. "KELLY" TEXT                            -->
+    <!-- ========================================== -->
+    <text x="155" y="228" 
+          font-family="'Arial Black', 'Impact', sans-serif" 
+          font-size="128" 
+          font-weight="900" 
+          fill="#FFFFFF" 
+          letter-spacing="-4">KELLY</text>
+
+    <!-- ========================================== -->
+    <!-- 3. GOLD SWOOSHES & STARS                   -->
+    <!-- ========================================== -->
+    <!-- Main Sweeping Arc -->
+    <path d="M 230 110 C 370 40, 600 45, 680 185 C 690 160, 660 75, 480 50 C 360 32, 260 75, 230 110 Z" 
+          fill="url(#goldGrad)" />
+          
+    <!-- Secondary Inner Accent Arc -->
+    <path d="M 330 82 C 450 58, 620 70, 662 165 C 668 150, 640 90, 500 72 C 430 63, 365 74, 330 82 Z" 
+          fill="url(#goldGrad)" opacity="0.85" />
+
+    <!-- Primary 4-Point Sparkle Star -->
+    <g transform="translate(640, 30)">
+      <path d="M 0,-22 Q 0,0 22,0 Q 0,0 0,22 Q 0,0 -22,0 Q 0,0 0,-22 Z" fill="url(#goldGrad)" />
+      <!-- Tiny internal highlight -->
+      <circle cx="0" cy="0" r="3" fill="#FFFFFF" />
+    </g>
+    
+    <!-- Secondary Tiny Sparkle -->
+    <path d="M 585,32 Q 585,39 592,39 Q 585,39 585,46 Q 585,39 578,39 Q 585,39 585,32 Z" fill="url(#goldGrad)" />
+
+    <!-- ========================================== -->
+    <!-- 4. SUBTEXT: "GENERAL SUPPLIES"            -->
+    <!-- ========================================== -->
+    <!-- Left Decorative Line -->
+    <line x1="10" y1="275" x2="90" y2="275" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round" />
+    
+    <!-- Centered Subtext -->
+    <text x="367" y="284" 
+          font-family="'Montserrat', 'Arial', sans-serif" 
+          font-size="25" 
+          font-weight="700" 
+          fill="#FFFFFF" 
+          text-anchor="middle" 
+          letter-spacing="11">GENERAL SUPPLIES</text>
+          
+    <!-- Right Decorative Line -->
+    <line x1="645" y1="275" x2="725" y2="275" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round" />
+  </g>
+</svg>
