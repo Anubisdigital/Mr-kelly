@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Mr. Kelly General Supplies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0D0D0D;
+  --s1:      #181818;
+  --s2:      #222222;
+  --s3:      #2A2A2A;
+  --orange:  #F15A22;
+  --orange2: #FF7A45;
+  --white:   #FFFFFF;
+  --muted:   #666666;
+  --border:  #2A2A2A;
+  --green:   #16A34A;
+  --red:     #DC2626;
+  --text:    #E8E8E8;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+/* ── LOGIN SCREEN ── */
+#loginScreen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.login-box {
+  width: 100%; max-width: 400px;
+  background: var(--s1); border: 1px solid var(--border);
+}
+.login-head {
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.login-logo {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.login-logo-icon {
+  width: 40px; height: 40px;
+  background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; color: var(--white); letter-spacing: 1px;
+}
+.login-logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 1px; color: var(--white);
+  line-height: 1.1;
+}
+.login-logo-text span { display: block; font-size: 11px; letter-spacing: 2px; color: var(--orange); }
+.login-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; letter-spacing: 1px; color: var(--white);
+}
+.login-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.login-body { padding: 24px 28px 28px; }
+.login-err {
+  background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3);
+  color: #f87171; font-size: 12px; padding: 10px 14px;
+  margin-bottom: 16px; display: none;
+}
+.login-err.show { display: block; }
+.f-group { margin-bottom: 14px; }
+.f-label {
+  display: block; font-size: 9px; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px; font-weight: 600;
+}
+.f-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  color: var(--white); padding: 10px 12px;
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color 0.15s;
+}
+.f-input:focus { border-color: var(--orange); }
+.login-btn {
+  width: 100%; height: 46px;
+  background: var(--orange); color: var(--white); border: none; cursor: pointer;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px; letter-spacing: 1.5px;
+  transition: background 0.15s; margin-top: 4px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.login-btn:hover { background: var(--orange2); }
+.login-btn:disabled { background: var(--s3); color: var(--muted); cursor: not-allowed; }
+
+/* ── ADMIN APP (hidden until logged in) ── */
+#adminApp { display: none; }
+
+/* ── NAV ── */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 58px; background: var(--s1);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+.nav-logo-icon {
+  width: 32px; height: 32px; background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--white);
+}
+.nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px; letter-spacing: 1px; color: var(--white);
+}
+.nav-badge {
+  background: var(--orange); color: var(--white);
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; padding: 3px 8px;
+}
+.nav-spacer { flex: 1; }
+.nav-user {
+  font-size: 12px; color: var(--muted);
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-user span { color: var(--text); }
+.nav-site-link {
+  font-size: 12px; color: var(--muted); text-decoration: none;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.15s;
+}
+.nav-site-link:hover { color: var(--white); }
+.btn-signout {
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); padding: 5px 12px;
+  font-size: 11px; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all 0.12s;
+}
+.btn-signout:hover { border-color: var(--red); color: #f87171; }
+
+/* ── TAB BAR ── */
+.tab-bar {
+  position: fixed; top: 58px; left: 0; right: 0; z-index: 99;
+  background: var(--s1); border-bottom: 1px solid var(--border);
+  display: flex; padding: 0 24px;
+}
+.tab {
+  padding: 0 20px; height: 46px;
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--muted); cursor: pointer;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; letter-spacing: 1px;
+  transition: all 0.15s; display: flex; align-items: center; gap: 8px;
+}
+.tab:hover { color: var(--white); }
+.tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.tab-count {
+  background: var(--s3); color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 600;
+  padding: 1px 6px; min-width: 20px; text-align: center;
+}
+.tab.active .tab-count { background: var(--orange); color: var(--white); }
+
+/* ── MAIN CONTENT ── */
+.main { padding: 128px 24px 60px; max-width: 1280px; margin: 0 auto; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+}
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px; letter-spacing: 1px; color: var(--white);
+}
+.page-title span { color: var(--orange); }
+
+/* ── STATS ROW ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.stat { background: var(--s1); padding: 18px 20px; }
+.stat-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px; color: var(--orange); letter-spacing: 1px; line-height: 1;
+}
+.stat-label {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-top: 4px;
+}
+
+/* ── SEARCH / FILTER BAR ── */
+.toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.search-input {
+  flex: 1; min-width: 200px;
+  background: var(--s1); border: 1px solid var(--border);
+  color: var(--white); padding: 9px 14px;
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color 0.15s;
+}
+.search-input:focus { border-color: var(--orange); }
+.filter-select {
+  background: var(--s1); border: 1px solid var(--border);
+  color: var(--white); padding: 9px 12px;
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  outline: none; cursor: pointer;
+}
+.filter-select option { background: var(--s1); }
+
+/* ── ORDERS TABLE ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { border-bottom: 2px solid var(--orange); }
+th {
+  padding: 10px 14px; text-align: left;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; cursor: pointer; }
+tbody tr:hover { background: var(--s1); }
+td { padding: 14px; vertical-align: top; }
+
+.mono {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; color: var(--orange); letter-spacing: 1px;
+}
+.td-name { font-weight: 500; color: var(--white); }
+.td-contact { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.td-items { font-size: 12px; color: var(--muted); max-width: 200px; }
+.td-items span { display: block; padding: 1px 0; }
+
+.badge {
+  display: inline-block; padding: 3px 10px;
+  font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+}
+.badge-pending   { background: rgba(241,90,34,0.12); color: var(--orange); }
+.badge-fulfilled { background: rgba(22,163,74,0.12); color: #4ade80; }
+
+.td-date { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+.row-actions { display: flex; gap: 6px; }
+.act-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); padding: 5px 10px;
+  font-size: 11px; font-family: 'Inter', sans-serif;
+  cursor: pointer; white-space: nowrap; transition: all 0.12s;
+}
+.act-btn:hover { border-color: var(--orange); color: var(--orange); }
+.act-btn.fulfill { border-color: rgba(22,163,74,0.4); color: #4ade80; }
+.act-btn.fulfill:hover { background: rgba(22,163,74,0.1); }
+
+/* ── PRODUCTS ADMIN GRID ── */
+.prod-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.prod-card {
+  background: var(--s1); border: 1px solid var(--border);
+  display: flex; flex-direction: column; transition: border-color 0.15s;
+}
+.prod-card:hover { border-color: var(--s3); }
+
+.prod-card-img {
+  aspect-ratio: 4/3; overflow: hidden;
+  background: var(--s2); position: relative;
+}
+.prod-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.prod-card-img .no-img {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--s3); font-size: 36px;
+}
+.prod-note-badge {
+  position: absolute; top: 0; right: 0;
+  background: var(--orange); color: var(--white);
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 4px 8px;
+}
+
+.prod-card-body { padding: 16px; flex: 1; }
+.prod-card-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 0.5px;
+  color: var(--white); margin-bottom: 10px;
+}
+.prod-size-row {
+  display: flex; justify-content: space-between;
+  font-size: 12px; padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.prod-size-row:last-child { border-bottom: none; }
+.prod-size-row span:first-child { color: var(--muted); }
+.prod-size-row span:last-child { color: var(--orange); font-weight: 500; }
+
+.prod-card-footer {
+  padding: 12px 16px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+}
+.btn-edit {
+  flex: 1; height: 36px;
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer;
+  font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.12s;
+}
+.btn-edit:hover { border-color: var(--orange); color: var(--orange); }
+.btn-del {
+  height: 36px; padding: 0 14px;
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer;
+  font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.12s;
+}
+.btn-del:hover { border-color: var(--red); color: var(--red); }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--orange); color: var(--white);
+  border: none; cursor: pointer; padding: 0 20px; height: 40px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; letter-spacing: 1px; transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--orange2); }
+
+.btn-refresh {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer; padding: 0 16px; height: 40px;
+  font-size: 12px; font-family: 'Inter', sans-serif; transition: all 0.12s;
+}
+.btn-refresh:hover { border-color: var(--white); color: var(--white); }
+
+/* ── MODALS ── */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88); z-index: 500;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 60px 16px 16px; overflow-y: auto;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  width: 100%; max-width: 620px;
+  background: var(--s1); border: 1px solid var(--border);
+  transform: translateY(12px); transition: transform 0.25s;
+}
+.modal-bg.open .modal { transform: translateY(0); }
+
+.modal-head {
+  padding: 18px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-head-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px;
+}
+.modal-close {
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer;
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; transition: all 0.12s;
+}
+.modal-close:hover { border-color: var(--white); color: var(--white); }
+
+.modal-body { padding: 24px; }
+.modal-foot {
+  padding: 16px 24px; border-top: 1px solid var(--border);
+  display: flex; gap: 10px; justify-content: flex-end;
+}
+
+/* Form fields */
+.f-group { margin-bottom: 14px; }
+.f-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.f-select, .f-textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  color: var(--white); padding: 9px 12px;
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color 0.15s;
+}
+.f-select:focus, .f-textarea:focus { border-color: var(--orange); }
+.f-select option { background: var(--s1); }
+.f-textarea { resize: vertical; min-height: 68px; }
+
+/* Sizes editor */
+.sizes-editor { border: 1px solid var(--border); margin-bottom: 14px; }
+.sizes-editor-head {
+  padding: 10px 14px; background: var(--s2);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); font-weight: 600;
+}
+.add-size-btn {
+  background: none; border: 1px dashed var(--border); color: var(--muted);
+  padding: 3px 10px; font-size: 11px; cursor: pointer; transition: all 0.12s;
+}
+.add-size-btn:hover { border-color: var(--orange); color: var(--orange); }
+.sizes-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+
+.size-cols-head {
+  display: grid; grid-template-columns: 2fr 1.5fr auto;
+  gap: 8px; margin-bottom: 2px;
+}
+.size-cols-head span {
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+}
+.size-row-inputs {
+  display: grid; grid-template-columns: 2fr 1.5fr auto;
+  gap: 8px; align-items: center;
+}
+.size-row-inputs input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  color: var(--white); padding: 7px 10px;
+  font-size: 12px; font-family: 'Inter', sans-serif; outline: none;
+  transition: border-color 0.12s;
+}
+.size-row-inputs input:focus { border-color: var(--orange); }
+.rm-size {
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; transition: all 0.12s; flex-shrink: 0;
+}
+.rm-size:hover { border-color: var(--red); color: var(--red); }
+
+/* Image upload slots */
+.img-slots-wrap { margin-bottom: 14px; }
+.img-slots-head {
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; margin-bottom: 10px;
+}
+.img-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.img-slot {
+  aspect-ratio: 1; border: 1px dashed var(--border);
+  background: var(--bg); position: relative; overflow: hidden;
+  cursor: pointer; transition: border-color 0.12s;
+  display: flex; align-items: center; justify-content: center;
+}
+.img-slot:hover { border-color: var(--orange); }
+.img-slot img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.slot-plus { color: var(--s3); font-size: 22px; pointer-events: none; }
+.slot-spinner {
+  position: absolute; inset: 0;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7); z-index: 3;
+}
+.slot-spinner.active { display: flex; }
+.img-slot input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;
+}
+.rm-img {
+  position: absolute; top: 4px; right: 4px;
+  background: var(--red); color: var(--white);
+  border: none; width: 20px; height: 20px; cursor: pointer;
+  font-size: 11px;
+  display: none; align-items: center; justify-content: center; z-index: 4;
+}
+.rm-img.visible { display: flex; }
+
+/* Modal buttons */
+.btn-cancel {
+  background: none; border: 1px solid var(--border); color: var(--muted);
+  padding: 0 20px; height: 40px; cursor: pointer;
+  font-size: 13px; font-family: 'Inter', sans-serif; transition: all 0.12s;
+}
+.btn-cancel:hover { border-color: var(--white); color: var(--white); }
+.btn-save {
+  background: var(--orange); color: var(--white); border: none;
+  padding: 0 24px; height: 40px; cursor: pointer;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; letter-spacing: 1px; transition: background 0.15s;
+}
+.btn-save:hover { background: var(--orange2); }
+.btn-save:disabled { background: var(--s3); color: var(--muted); cursor: not-allowed; }
+
+/* Order detail modal */
+.od-section { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+.od-section:last-child { border-bottom: none; }
+.od-sec-label {
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px; font-weight: 600;
+}
+.od-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 13px; padding: 4px 0;
+}
+.od-row span:first-child { color: var(--muted); }
+.od-items li {
+  display: flex; justify-content: space-between;
+  font-size: 13px; padding: 6px 0;
+  border-bottom: 1px solid var(--border); list-style: none;
+}
+.od-items li:last-child { border-bottom: none; }
+.od-items li span:last-child { color: var(--muted); }
+
+/* ── MISC ── */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--s3); border-top-color: var(--orange);
+  border-radius: 50%; animation: spin 0.65s linear infinite;
+  display: inline-block; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-state { padding: 60px; text-align: center; color: var(--muted); }
+.loading-state p { margin-top: 12px; font-size: 13px; }
+.empty-state {
+  padding: 60px; text-align: center; color: var(--muted);
+  border: 1px dashed var(--border); font-size: 14px;
+}
+.empty-state strong {
+  display: block; font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; color: var(--white); letter-spacing: 1px; margin-bottom: 6px;
+}
+
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: var(--s1); border: 1px solid var(--border);
+  padding: 12px 20px; font-size: 13px;
+  transform: translateY(60px); opacity: 0;
+  transition: all 0.25s; pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok   { border-color: #16A34A; color: #4ade80; }
+.toast.err  { border-color: var(--red); color: #f87171; }
+
+@media (max-width: 600px) {
+  .main { padding: 120px 12px 60px; }
+  .tab { padding: 0 12px; font-size: 14px; }
+  .f-row2 { grid-template-columns: 1fr; }
+  .top-nav .nav-user span { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-head">
+      <div class="login-logo">
+        <div class="login-logo-icon">MK</div>
+        <div class="login-logo-text">
+          Mr. Kelly
+          <span>General Supplies</span>
+        </div>
+      </div>
+      <div class="login-title">Admin Sign In</div>
+      <div class="login-sub">Authorised personnel only</div>
+    </div>
+    <div class="login-body">
+      <div class="login-err" id="loginErr"></div>
+      <div class="f-group">
+        <label class="f-label">Email Address</label>
+        <input class="f-input" type="email" id="loginEmail" placeholder="admin@example.com" autocomplete="email"/>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Password</label>
+        <input class="f-input" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doLogin()"/>
+      </div>
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">
+        Sign In
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN APP ══════════════ -->
+<div id="adminApp">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <div class="nav-logo-icon">MK</div>
+    <div class="nav-brand">Mr. Kelly</div>
+    <div class="nav-badge">Admin</div>
+    <div class="nav-spacer"></div>
+    <div class="nav-user">
+      Signed in as <span id="navUserEmail">—</span>
+    </div>
+    <a class="nav-site-link" href="index.html" target="_blank">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+      View Site
+    </a>
+    <button class="btn-signout" onclick="doSignOut()">Sign Out</button>
+  </nav>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('orders')">
+      Orders <span class="tab-count" id="ordersTabCount">0</span>
+    </button>
+    <button class="tab" onclick="switchTab('products')">
+      Products <span class="tab-count" id="productsTabCount">0</span>
+    </button>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ORDERS PANEL -->
+    <div class="panel active" id="panel-orders">
+      <div class="page-header">
+        <h1 class="page-title">Order <span>Requests</span></h1>
+        <button class="btn-refresh" onclick="loadOrders()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-val" id="sTotal">—</div><div class="stat-label">Total</div></div>
+        <div class="stat"><div class="stat-val" id="sPending">—</div><div class="stat-label">Pending</div></div>
+        <div class="stat"><div class="stat-val" id="sFulfilled">—</div><div class="stat-label">Fulfilled</div></div>
+        <div class="stat"><div class="stat-val" id="sToday">—</div><div class="stat-label">Today</div></div>
+      </div>
+
+      <div class="toolbar">
+        <input class="search-input" type="text" placeholder="Search by name, ID, phone, email…" oninput="filterOrders(this.value)"/>
+        <select class="filter-select" id="statusFilter" onchange="filterOrders(document.querySelector('.search-input').value)">
+          <option value="">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="fulfilled">Fulfilled</option>
+        </select>
+      </div>
+
+      <div class="table-wrap" id="ordersWrap">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading orders…</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS PANEL -->
+    <div class="panel" id="panel-products">
+      <div class="page-header">
+        <h1 class="page-title">Manage <span>Products</span></h1>
+        <button class="btn-primary" onclick="openProductForm()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add Product
+        </button>
+      </div>
+      <div id="productsWrap">
+        <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /adminApp -->
+
+<!-- ORDER DETAIL MODAL -->
+<div class="modal-bg" id="orderModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-head-title">Order Detail</span>
+      <button class="modal-close" onclick="closeModal('orderModal')">✕</button>
+    </div>
+    <div id="orderDetailContent"></div>
+  </div>
+</div>
+
+<!-- PRODUCT FORM MODAL -->
+<div class="modal-bg" id="productModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-head-title" id="productModalTitle">Add Product</span>
+      <button class="modal-close" onclick="closeModal('productModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="pf_id"/>
+
+      <div class="f-row2">
+        <div class="f-group">
+          <label class="f-label">Product Name *</label>
+          <input class="f-input" type="text" id="pf_name" placeholder="e.g. Mops"/>
+        </div>
+        <div class="f-group">
+          <label class="f-label">Category</label>
+          <select class="f-select" id="pf_category">
+            <option value="">Select category</option>
+            <option>Cleaning Tools</option>
+            <option>Mops &amp; Squeezers</option>
+            <option>Brushes</option>
+            <option>Dustpans &amp; Brooms</option>
+            <option>Buckets &amp; Bins</option>
+            <option>Garbage Bags</option>
+            <option>Air Fresheners</option>
+            <option>Detergents &amp; Chemicals</option>
+            <option>Gloves &amp; Protective Gear</option>
+            <option>Paper Products</option>
+            <option>Dispensers &amp; Accessories</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="f-group">
+        <label class="f-label">Description</label>
+        <textarea class="f-textarea" id="pf_desc" placeholder="Short product description…"></textarea>
+      </div>
+
+      <div class="f-group">
+        <label class="f-label">Quick Note (badge on card — e.g. "Top Seller", "New")</label>
+        <input class="f-input" type="text" id="pf_note" placeholder="e.g. Best Seller"/>
+      </div>
+
+      <!-- SIZES & PRICES -->
+      <div class="sizes-editor">
+        <div class="sizes-editor-head">
+          Sizes &amp; Prices
+          <button class="add-size-btn" onclick="addSizeRow({}, true)">+ Add Size</button>
+        </div>
+        <div class="sizes-body">
+          <div class="size-cols-head">
+            <span>Label / Size</span>
+            <span>Price (UGX)</span>
+            <span></span>
+          </div>
+          <div id="sizesContainer"></div>
+        </div>
+      </div>
+
+      <!-- IMAGES -->
+      <div class="img-slots-wrap">
+        <div class="img-slots-head">Product Images — up to 4 (click slot to upload)</div>
+        <div class="img-slots" id="imgSlots"></div>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px">Images are uploaded to Cloudinary via the worker. The worker URL and credentials must be set in Cloudflare.</p>
+      </div>
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('productModal')">Cancel</button>
+      <button class="btn-save" id="saveBtn" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════ FIREBASE SDK ══════════════ -->
+<script type="module">
+import { initializeApp }        from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+                                from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBG9D__ghT2fkSkE8QI53lEDKp-iLa_fBA",
+  authDomain:        "mr-kelly-98ff5.firebaseapp.com",
+  projectId:         "mr-kelly-98ff5",
+  storageBucket:     "mr-kelly-98ff5.firebasestorage.app",
+  messagingSenderId: "947000753275",
+  appId:             "1:947000753275:web:9b37aca3365e13e5ab76de",
+  measurementId:     "G-86XFL0CZZT"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// ── Expose to global scope so non-module functions can use them ──
+window._auth = auth;
+window._fbSignIn  = (email, pass) => signInWithEmailAndPassword(auth, email, pass);
+window._fbSignOut = () => signOut(auth);
+
+// ── Auth state listener ──
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // Get fresh ID token and pass to admin app
+    const token = await user.getIdToken();
+    window._currentToken = token;
+    window._currentEmail = user.email;
+    document.getElementById('loginScreen').style.display  = 'none';
+    document.getElementById('adminApp').style.display     = 'block';
+    document.getElementById('navUserEmail').textContent   = user.email;
+    window.loadOrders();
+    window.loadProducts();
+
+    // Refresh token every 50 minutes
+    setInterval(async () => {
+      window._currentToken = await user.getIdToken(true);
+    }, 50 * 60 * 1000);
+  } else {
+    window._currentToken = null;
+    window._currentEmail = null;
+    document.getElementById('loginScreen').style.display  = 'flex';
+    document.getElementById('adminApp').style.display     = 'none';
+  }
+});
+</script>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const WORKER = 'https://kelly-order-worker.lubegadoreen02.workers.dev';
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let allOrders   = [];
+let allProducts = [];
+let slotImgs    = [null, null, null, null];
+let editingId   = null;
+
+// ── AUTH HELPERS ──────────────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  const btn   = document.getElementById('loginBtn');
+
+  errEl.classList.remove('show');
+  if (!email || !pass) {
+    errEl.textContent = 'Enter your email and password.';
+    errEl.classList.add('show'); return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="border-top-color:#fff;border-color:rgba(255,255,255,0.2)"></div> Signing in…';
+
+  try {
+    await window._fbSignIn(email, pass);
+    // onAuthStateChanged handles the rest
+  } catch(e) {
+    let msg = 'Sign in failed. Check your email and password.';
+    if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
+      msg = 'Incorrect email or password.';
+    else if (e.code === 'auth/too-many-requests')
+      msg = 'Too many attempts. Try again later.';
+    errEl.textContent = msg;
+    errEl.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+  }
+}
+
+async function doSignOut() {
+  await window._fbSignOut();
+}
+
+// Expose to HTML onclick
+window.doLogin   = doLogin;
+window.doSignOut = doSignOut;
+
+// ── AUTH FETCH (adds Bearer token) ───────────────────────────────────────────
+function authFetch(url, opts = {}) {
+  const token = window._currentToken;
+  return fetch(url, {
+    ...opts,
+    headers: {
+      ...(opts.headers || {}),
+      'Authorization': `Bearer ${token}`
+    }
+  });
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`panel-${name}`).classList.add('active');
+  document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+}
+window.switchTab = switchTab;
+
+// ── MODALS ────────────────────────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+window.openModal  = openModal;
+window.closeModal = closeModal;
+
+// ── ORDERS ────────────────────────────────────────────────────────────────────
+async function loadOrders() {
+  document.getElementById('ordersWrap').innerHTML =
+    `<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>`;
+  try {
+    const res  = await authFetch(`${WORKER}/orders`);
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    allOrders  = data.orders || [];
+    renderOrders(allOrders);
+    document.getElementById('ordersTabCount').textContent = allOrders.length;
+  } catch(e) {
+    document.getElementById('ordersWrap').innerHTML =
+      `<div class="empty-state"><strong>Could not load orders</strong>${e.message||'Check worker URL and Cloudflare secrets.'}</div>`;
+  }
+}
+window.loadOrders = loadOrders;
+
+function renderOrders(orders) {
+  const total     = orders.length;
+  const pending   = orders.filter(o => o.status === 'pending').length;
+  const fulfilled = orders.filter(o => o.status === 'fulfilled').length;
+  const today     = orders.filter(o => {
+    if (!o.createdAt) return false;
+    const d = new Date(o.createdAt);
+    const n = new Date();
+    return d.toDateString() === n.toDateString();
+  }).length;
+
+  document.getElementById('sTotal').textContent     = total;
+  document.getElementById('sPending').textContent   = pending;
+  document.getElementById('sFulfilled').textContent = fulfilled;
+  document.getElementById('sToday').textContent     = today;
+
+  if (!orders.length) {
+    document.getElementById('ordersWrap').innerHTML =
+      `<div class="empty-state"><strong>No orders yet</strong>Orders appear here once customers submit them.</div>`;
+    return;
+  }
+
+  const rows = orders.map(o => {
+    const date  = o.createdAt
+      ? new Date(o.createdAt).toLocaleDateString('en-UG', { day:'numeric', month:'short', year:'numeric' })
+      : '—';
+    const time  = o.createdAt
+      ? new Date(o.createdAt).toLocaleTimeString('en-UG', { hour:'2-digit', minute:'2-digit' })
+      : '';
+    const items = (o.items || [])
+      .map(i => `<span>${i.product} — ${i.variant} ×${i.qty}</span>`).join('');
+    const badge = o.status === 'fulfilled'
+      ? `<span class="badge badge-fulfilled">Fulfilled</span>`
+      : `<span class="badge badge-pending">Pending</span>`;
+    const statusBtn = o.status === 'fulfilled'
+      ? `<button class="act-btn" onclick="event.stopPropagation();setStatus('${o._id}','pending')">Reopen</button>`
+      : `<button class="act-btn fulfill" onclick="event.stopPropagation();setStatus('${o._id}','fulfilled')">Fulfill</button>`;
+
+    return `<tr onclick="viewOrder('${o._id}')">
+      <td><span class="mono">${o.requestId || '—'}</span></td>
+      <td>
+        <div class="td-name">${o.name || '—'}</div>
+        <div class="td-contact">${[o.phone, o.email].filter(Boolean).join(' · ')}</div>
+        ${o.location ? `<div class="td-contact">${o.location}</div>` : ''}
+      </td>
+      <td class="td-date">${date}<br/><span style="color:var(--s3);font-size:11px">${time}</span></td>
+      <td class="td-items">${items}</td>
+      <td>
+        ${badge}
+        ${o.businessType ? `<div style="font-size:11px;color:var(--muted);margin-top:4px">${o.businessType}</div>` : ''}
+      </td>
+      <td><div class="row-actions">
+        <button class="act-btn" onclick="event.stopPropagation();viewOrder('${o._id}')">View</button>
+        ${statusBtn}
+      </div></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('ordersWrap').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Request ID</th>
+        <th>Customer</th>
+        <th>Date</th>
+        <th>Items</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function filterOrders(q = '') {
+  const statusFilter = document.getElementById('statusFilter').value;
+  q = q.toLowerCase();
+  let filtered = allOrders;
+  if (q) filtered = filtered.filter(o =>
+    (o.name||'').toLowerCase().includes(q) ||
+    (o.phone||'').includes(q) ||
+    (o.email||'').toLowerCase().includes(q) ||
+    (o.requestId||'').toLowerCase().includes(q) ||
+    (o.location||'').toLowerCase().includes(q) ||
+    (o.businessName||'').toLowerCase().includes(q)
+  );
+  if (statusFilter) filtered = filtered.filter(o => o.status === statusFilter);
+  renderOrders(filtered);
+}
+window.filterOrders = filterOrders;
+
+async function setStatus(id, status) {
+  try {
+    const res = await authFetch(`${WORKER}/orders/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    if (!res.ok) throw new Error();
+    toast(`Marked as ${status}`);
+    loadOrders();
+  } catch { toast('Failed to update status', 'err'); }
+}
+window.setStatus = setStatus;
+
+function viewOrder(id) {
+  const o = allOrders.find(x => x._id === id);
+  if (!o) return;
+  const date = o.createdAt ? new Date(o.createdAt).toLocaleString('en-UG') : '—';
+  const items = (o.items || []).map(i =>
+    `<li>
+      <span>${i.product}${i.variant ? ' — ' + i.variant : ''}</span>
+      <span>×${i.qty}</span>
+    </li>`
+  ).join('');
+
+  document.getElementById('orderDetailContent').innerHTML = `
+    <div class="od-section">
+      <div class="od-sec-label">Request Info</div>
+      <div class="od-row"><span>Request ID</span><span class="mono">${o.requestId||'—'}</span></div>
+      <div class="od-row"><span>Status</span>
+        <span class="badge ${o.status==='fulfilled'?'badge-fulfilled':'badge-pending'}">${o.status||'pending'}</span>
+      </div>
+      <div class="od-row"><span>Submitted</span><span>${date}</span></div>
+    </div>
+    <div class="od-section">
+      <div class="od-sec-label">Customer Details</div>
+      <div class="od-row"><span>Full Name</span><span>${o.name||'—'}</span></div>
+      <div class="od-row"><span>Phone</span><span>${o.phone||'—'}</span></div>
+      <div class="od-row"><span>Email</span><span>${o.email||'—'}</span></div>
+      <div class="od-row"><span>Location</span><span>${o.location||'—'}</span></div>
+    </div>
+    <div class="od-section">
+      <div class="od-sec-label">Business Info</div>
+      <div class="od-row"><span>Business Name</span><span>${o.businessName||'—'}</span></div>
+      <div class="od-row"><span>Business Type</span><span>${o.businessType||'—'}</span></div>
+    </div>
+    <div class="od-section">
+      <div class="od-sec-label">Items Ordered</div>
+      <ul class="od-items">${items || '<li><span style="color:var(--muted)">No items recorded</span></li>'}</ul>
+    </div>
+    <div class="od-section" style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+      ${o.phone
+        ? `<a href="https://wa.me/${o.phone.replace(/\D/g,'')}" target="_blank"
+            style="display:flex;align-items:center;gap:6px;background:#25D366;color:#fff;border:none;
+                   padding:0 16px;height:38px;font-family:'Bebas Neue',sans-serif;font-size:15px;
+                   letter-spacing:1px;text-decoration:none;cursor:pointer">
+            WhatsApp Customer
+          </a>`
+        : ''}
+      ${o.status !== 'fulfilled'
+        ? `<button class="btn-primary" style="font-size:14px;height:38px"
+            onclick="setStatus('${o._id}','fulfilled');closeModal('orderModal')">
+            Mark Fulfilled
+           </button>`
+        : `<button class="btn-cancel"
+            onclick="setStatus('${o._id}','pending');closeModal('orderModal')">
+            Reopen as Pending
+           </button>`
+      }
+    </div>`;
+
+  openModal('orderModal');
+}
+window.viewOrder = viewOrder;
+
+// ── PRODUCTS ──────────────────────────────────────────────────────────────────
+async function loadProducts() {
+  document.getElementById('productsWrap').innerHTML =
+    `<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>`;
+  try {
+    const res  = await fetch(`${WORKER}/products`);
+    const data = await res.json();
+    allProducts = data.products || [];
+    renderProducts();
+    document.getElementById('productsTabCount').textContent = allProducts.length;
+  } catch(e) {
+    document.getElementById('productsWrap').innerHTML =
+      `<div class="empty-state"><strong>Could not load products</strong>Check worker connection.</div>`;
+  }
+}
+window.loadProducts = loadProducts;
+
+function renderProducts() {
+  if (!allProducts.length) {
+    document.getElementById('productsWrap').innerHTML =
+      `<div class="empty-state"><strong>No products yet</strong>Click "Add Product" to get started.</div>`;
+    return;
+  }
+  document.getElementById('productsWrap').innerHTML = `
+    <div class="prod-grid">${allProducts.map(p => {
+      const img   = (p.images||[])[0];
+      const sizes = (p.sizes||[]).map(s =>
+        `<div class="prod-size-row">
+          <span>${s.label}</span>
+          <span>${s.price ? 'UGX '+Number(s.price).toLocaleString() : 'Contact us'}</span>
+        </div>`).join('');
+      return `
+      <div class="prod-card">
+        <div class="prod-card-img">
+          ${img
+            ? `<img src="${img}" alt="${p.name}" loading="lazy"/>`
+            : `<div class="no-img">&#9633;</div>`}
+          ${p.note ? `<div class="prod-note-badge">${p.note}</div>` : ''}
+        </div>
+        <div class="prod-card-body">
+          <div class="prod-card-name">${p.name}</div>
+          ${p.category ? `<div style="font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase">${p.category}</div>` : ''}
+          ${sizes}
+        </div>
+        <div class="prod-card-footer">
+          <button class="btn-edit" onclick="editProduct('${p._id}')">Edit</button>
+          <button class="btn-del"  onclick="deleteProduct('${p._id}','${p.name.replace(/'/g,"\\'")}')">Delete</button>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+}
+
+// ── PRODUCT FORM ──────────────────────────────────────────────────────────────
+function openProductForm() {
+  editingId = null;
+  slotImgs  = [null, null, null, null];
+  document.getElementById('productModalTitle').textContent = 'Add Product';
+  document.getElementById('pf_id').value       = '';
+  document.getElementById('pf_name').value     = '';
+  document.getElementById('pf_category').value = '';
+  document.getElementById('pf_desc').value     = '';
+  document.getElementById('pf_note').value     = '';
+  document.getElementById('sizesContainer').innerHTML = '';
+  addSizeRow();
+  renderImgSlots();
+  openModal('productModal');
+}
+window.openProductForm = openProductForm;
+
+function editProduct(id) {
+  const p = allProducts.find(x => x._id === id);
+  if (!p) return;
+  editingId = id;
+  document.getElementById('productModalTitle').textContent = 'Edit Product';
+  document.getElementById('pf_id').value       = id;
+  document.getElementById('pf_name').value     = p.name || '';
+  document.getElementById('pf_category').value = p.category || '';
+  document.getElementById('pf_desc').value     = p.description || '';
+  document.getElementById('pf_note').value     = p.note || '';
+
+  slotImgs = [...(p.images||[])].slice(0, 4);
+  while (slotImgs.length < 4) slotImgs.push(null);
+
+  document.getElementById('sizesContainer').innerHTML = '';
+  (p.sizes||[]).forEach(s => addSizeRow(s));
+  if (!(p.sizes||[]).length) addSizeRow();
+
+  renderImgSlots();
+  openModal('productModal');
+}
+window.editProduct = editProduct;
+
+function addSizeRow(size = {}, focus = false) {
+  const div = document.createElement('div');
+  div.className = 'size-row-inputs';
+  div.innerHTML = `
+    <input type="text"   class="size-label-input" placeholder="e.g. Standard / 5 Litres" value="${size.label||''}"/>
+    <input type="number" class="size-price-input" placeholder="Price in UGX" value="${size.price != null ? size.price : ''}"/>
+    <button class="rm-size" title="Remove" onclick="removeSizeRow(this)">✕</button>`;
+
+  const container = document.getElementById('sizesContainer');
+  container.appendChild(div);
+
+  const labelInput = div.querySelector('.size-label-input');
+  const priceInput = div.querySelector('.size-price-input');
+
+  // Auto-add new row when user types in label OR price of the LAST row
+  function maybeAddRow() {
+    const rows = container.querySelectorAll('.size-row-inputs');
+    if (div === rows[rows.length - 1]) {
+      // Only add if something is filled in
+      if (labelInput.value.trim() || priceInput.value.trim()) {
+        addSizeRow({}, false);
+      }
+    }
+  }
+
+  labelInput.addEventListener('input', maybeAddRow);
+  priceInput.addEventListener('input', maybeAddRow);
+
+  // Tab from price goes to next row's label
+  priceInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab' && !e.shiftKey) {
+      const rows = container.querySelectorAll('.size-row-inputs');
+      const idx  = Array.from(rows).indexOf(div);
+      const next = rows[idx + 1];
+      if (next) {
+        e.preventDefault();
+        next.querySelector('.size-label-input').focus();
+      }
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const rows = container.querySelectorAll('.size-row-inputs');
+      const last = rows[rows.length - 1];
+      if (div === last) addSizeRow({}, true);
+      else {
+        const idx  = Array.from(rows).indexOf(div);
+        rows[idx + 1].querySelector('.size-label-input').focus();
+      }
+    }
+  });
+
+  if (focus) labelInput.focus();
+}
+window.addSizeRow = addSizeRow;
+
+function removeSizeRow(btn) {
+  const container = document.getElementById('sizesContainer');
+  const rows = container.querySelectorAll('.size-row-inputs');
+  if (rows.length <= 1) {
+    // Clear instead of remove if it's the only row
+    rows[0].querySelector('.size-label-input').value = '';
+    rows[0].querySelector('.size-price-input').value = '';
+    return;
+  }
+  btn.parentElement.remove();
+}
+window.removeSizeRow = removeSizeRow;
+
+function renderImgSlots() {
+  document.getElementById('imgSlots').innerHTML = slotImgs.map((url, i) => `
+    <div class="img-slot" id="slot${i}">
+      ${url ? `<img src="${url}" alt="Image ${i+1}"/>` : ''}
+      <span class="slot-plus" ${url ? 'style="display:none"' : ''}>+</span>
+      <div class="slot-spinner" id="spin${i}">
+        <div class="spinner"></div>
+      </div>
+      ${url ? `<button class="rm-img visible" onclick="removeSlotImg(event,${i})">✕</button>` : ''}
+      <input type="file" accept="image/*" onchange="uploadSlotImg(event,${i})"/>
+    </div>`).join('');
+}
+
+async function uploadSlotImg(event, i) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const spinEl = document.getElementById(`spin${i}`);
+  spinEl.classList.add('active');
+
+  try {
+    const fd = new FormData();
+    fd.append('name', document.getElementById('pf_name').value || 'product');
+    fd.append('sizes', JSON.stringify([]));
+    fd.append('image_files', file);
+
+    const res  = await authFetch(
+      editingId ? `${WORKER}/products/${editingId}` : `${WORKER}/products`,
+      { method: editingId ? 'PATCH' : 'POST', body: fd }
+    );
+
+    // If editing, the worker PATCH also returns the product with updated images
+    // We extract the image URL from the response
+    if (res.ok) {
+      const data = await res.json();
+      const imgs = (data.product && data.product.images) || [];
+      // Find the new URL (last one added)
+      if (imgs.length) {
+        slotImgs[i] = imgs[imgs.length - 1];
+        toast('Image uploaded');
+      }
+    } else {
+      // Fallback: try to get the URL from a standalone worker upload by re-fetching
+      throw new Error(await res.text());
+    }
+  } catch(e) {
+    // Direct Cloudinary upload fallback (requires unsigned preset "kelly_products")
+    try {
+      const cloudName = 'dopuutcka'; // ← replace with your Cloudinary cloud name
+      const cloudFd   = new FormData();
+      cloudFd.append('file', file);
+      cloudFd.append('upload_preset', 'kelly_products');
+      cloudFd.append('folder', 'kelly-products');
+
+      const cRes  = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST', body: cloudFd
+      });
+      const cData = await cRes.json();
+      if (!cData.secure_url) throw new Error(cData.error?.message || 'Upload failed');
+      slotImgs[i] = cData.secure_url;
+      toast('Image uploaded via Cloudinary');
+    } catch(e2) {
+      toast('Image upload failed: ' + e2.message, 'err');
+    }
+  }
+
+  spinEl.classList.remove('active');
+  renderImgSlots();
+}
+window.uploadSlotImg = uploadSlotImg;
+
+function removeSlotImg(e, i) {
+  e.stopPropagation();
+  slotImgs[i] = null;
+  renderImgSlots();
+}
+window.removeSlotImg = removeSlotImg;
+
+async function saveProduct() {
+  const name     = document.getElementById('pf_name').value.trim();
+  const category = document.getElementById('pf_category').value;
+  const desc     = document.getElementById('pf_desc').value.trim();
+  const note     = document.getElementById('pf_note').value.trim();
+
+  if (!name) { toast('Product name is required', 'err'); return; }
+
+  // Collect ALL size rows
+  const sizes = [];
+  document.querySelectorAll('#sizesContainer .size-row-inputs').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const label  = inputs[0].value.trim();
+    const price  = inputs[1].value !== '' ? parseFloat(inputs[1].value) : null;
+    if (label) sizes.push({ label, price });
+  });
+
+  if (!sizes.length) { toast('Add at least one size or variant', 'err'); return; }
+
+  const btn = document.getElementById('saveBtn');
+  btn.disabled    = true;
+  btn.textContent = 'Saving…';
+
+  const payload = {
+    name, category, description: desc, note, sizes,
+    images: slotImgs.filter(Boolean)
+  };
+
+  const url    = editingId ? `${WORKER}/products/${editingId}` : `${WORKER}/products`;
+  const method = editingId ? 'PATCH' : 'POST';
+
+  try {
+    const res = await authFetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || 'Save failed');
+    }
+    toast(editingId ? 'Product updated ✓' : 'Product published ✓');
+    closeModal('productModal');
+    loadProducts();
+  } catch(e) {
+    toast('Error: ' + e.message, 'err');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Save Product';
+  }
+}
+window.saveProduct = saveProduct;
+
+async function deleteProduct(id, name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  try {
+    const res = await authFetch(`${WORKER}/products/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error();
+    toast('Product deleted');
+    loadProducts();
+  } catch { toast('Failed to delete product', 'err'); }
+}
+window.deleteProduct = deleteProduct;
+</script>
+</body>
+</html>
